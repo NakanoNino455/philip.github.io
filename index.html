@@ -72,13 +72,12 @@
             <li><a href="#" onclick="filterProducts('inductioncookers')">Induction Cookers</a></li>
         </ul>
 
-        <!-- Audio Player Control moved here -->
+        <!-- Audio Player Control -->
         <div class="audio-controls">
-            <audio id="background-music" loop autoplay>
+            <audio controls autoplay>
                 <source src="phonekisses.mp3" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
-            <button id="play-pause-btn">Pause Music</button>
         </div>
     </div>
 
@@ -87,23 +86,18 @@
         <div class="product-item" data-category="fans">
             <img src="fan1.jpg" alt="Fan 1">
             <p>Fan 1</p>
-            <p class="price">p199</p>
+            <p class="price">$199</p>
         </div>
         <div class="product-item" data-category="airfryers">
             <img src="airfryer1.jpg" alt="Air Fryer 1">
             <p>Air Fryer 1</p>
-            <p class="price">p399</p>
+            <p class="price">$399</p>
         </div>
         <div class="product-item" data-category="inductioncookers">
             <img src="inductioncooker1.jpg" alt="Induction Cooker 1">
             <p>Induction Cooker 1</p>
-            <p class="price">p299</p>
+            <p class="price">$299</p>
         </div>
-        <div class="product-item" data-category="electronics">
-    <img src="images/new-product.jpg" alt="我了个都">
-    <p>New Product Name</p>
-    <p class="price">p2000</p>
-   </div>
     </div>
 
     <script>
@@ -117,20 +111,6 @@
                 }
             });
         }
-
-        // Music control logic
-        const music = document.getElementById("background-music");
-        const playPauseBtn = document.getElementById("play-pause-btn");
-
-        playPauseBtn.addEventListener("click", function() {
-            if (music.paused) {
-                music.play();
-                playPauseBtn.textContent = "Pause Music";
-            } else {
-                music.pause();
-                playPauseBtn.textContent = "Play Music";
-            }
-        });
     </script>
 </body>
 </html>
