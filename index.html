@@ -14,6 +14,8 @@
             background-size: cover;
             margin: 0;
             padding: 0;
+            position: relative; /* Add position relative to body */
+            min-height: 100vh; /* Ensure body takes full height */
         }
         .sidebar {
             float: left;
@@ -56,9 +58,11 @@
         a:hover {
             color: #ff6347;
         }
-        /* Audio controls styles */
+        /* Positioning audio controls in the bottom left corner */
         .audio-controls {
-            margin-top: 20px;  /* Margin for spacing */
+            position: absolute; /* Use absolute positioning */
+            bottom: 10px; /* Position 10px from the bottom */
+            left: 10px; /* Position 10px from the left */
         }
     </style>
 </head>
@@ -71,14 +75,6 @@
             <li><a href="#" onclick="filterProducts('airfryers')">Air Fryers</a></li>
             <li><a href="#" onclick="filterProducts('inductioncookers')">Induction Cookers</a></li>
         </ul>
-
-        <!-- Audio Player Control -->
-        <div class="audio-controls">
-            <audio controls autoplay>
-                <source src="phonekisses.mp3" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio>
-        </div>
     </div>
 
     <div class="products" id="product-list">
@@ -98,6 +94,14 @@
             <p>Induction Cooker 1</p>
             <p class="price">$299</p>
         </div>
+    </div>
+
+    <!-- Audio Player Control at the bottom left corner -->
+    <div class="audio-controls">
+        <audio controls autoplay>
+            <source src="phonekisses.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
     </div>
 
     <script>
