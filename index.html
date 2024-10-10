@@ -56,6 +56,10 @@
         a:hover {
             color: #ff6347;
         }
+        /* Audio controls styles */
+        .audio-controls {
+            margin-top: 20px;  /* Margin for spacing */
+        }
     </style>
 </head>
 <body>
@@ -67,6 +71,15 @@
             <li><a href="#" onclick="filterProducts('airfryers')">Air Fryers</a></li>
             <li><a href="#" onclick="filterProducts('inductioncookers')">Induction Cookers</a></li>
         </ul>
+
+        <!-- Audio Player Control moved here -->
+        <div class="audio-controls">
+            <audio id="background-music" loop autoplay>
+                <source src="phonekisses.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            <button id="play-pause-btn">Pause Music</button>
+        </div>
     </div>
 
     <div class="products" id="product-list">
@@ -87,18 +100,10 @@
             <p class="price">p299</p>
         </div>
         <div class="product-item" data-category="electronics">
-    <img src="images/new-product.jpg" alt="New Product">
+    <img src="images/new-product.jpg" alt="我了个都">
     <p>New Product Name</p>
     <p class="price">p2000</p>
-     </div>
-    </div>
-
-    <div class="audio-controls">
-        <audio id="background-music" loop>
-            <source src="phonekisses.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-        <button id="play-pause-btn">Play Music</button>
+   </div>
     </div>
 
     <script>
@@ -113,6 +118,7 @@
             });
         }
 
+        // Music control logic
         const music = document.getElementById("background-music");
         const playPauseBtn = document.getElementById("play-pause-btn");
 
@@ -125,7 +131,6 @@
                 playPauseBtn.textContent = "Play Music";
             }
         });
-        
     </script>
 </body>
 </html>
