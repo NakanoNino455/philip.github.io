@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>999 Shopping Mall</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-image: url('your-background-image');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        header {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            flex: 1;
+        }
+        aside {
+            width: 200px;
+            padding: 1rem;
+            background-color: #f1f3f5;
+        }
+        main {
+            flex: 1;
+            padding: 1rem;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .product-card {
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            margin-bottom: 0.5rem;
+        }
+        .newest-product {
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .newest-product img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            margin-bottom: 0.5rem;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #cart-button {
+            position: relative;
+        }
+        #cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
+        #cart-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            aside {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>999 Shopping Mall</h1>
+        <button id="cart-button">
+            Cart
+            <span id="cart-count">0</span>
+        </button>
+    </header>
+    <div class="container">
+        <aside>
+            <h2>Categories</h2>
+            <div id="categories"></div>
+        </aside>
+        <main>
+            <h2 id="category-title">All Products</h2>
+            <div id="newest-product"></div>
+            <div id="product-grid" class="product-grid"></div>
+        </main>
+    </div>
+    <div id="cart-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Shopping Cart</h2>
+            <div id="cart-items"></div>
+            <div id="cart-total"></div>
+            <div id="checkout-form" style="display: none;">
+                <h3>Select payment method:</h3>
+                <label>
+                    <input type="radio" name="payment" value="store"> In-store cash payment
+                </label>
+                <label>
+                    <input type="radio" name="payment" value="online"> Online payment
+                </label>
+                <div id="payment-details"></div>
+                <button id="submit-order">Submit Order</button>
+            </div>
+            <button id="checkout-button">Checkout</button>
+        </div>
+    </div>
+    <script>
+        const products = [
+            { id: 1, name: "Running Shoes", price: 1499, image: "/placeholder.svg?height=200&width=200", category: "Shoes" },
+            { id: 2, name: "T-Shirt", price: 499, image: "/placeholder.svg?height=200&width=200", category: "Clothes" },
+            { id: 3, name: "Jeans", price: 999, image: "/placeholder.svg?height=200&width=200", category: "Clothes" },
+            { id: 4, name: "Backpack", price: 799, image: "/placeholder.svg?height=200&width=200", category: "Accessories" },
+            { id: 5, name: "Cap", price: 299, image: "/placeholder.svg?height=200&width=200", category: "Accessories" },
+            { id: 6, name: "Watch", price: 2999, image: "/placeholder.svg?height=200&width=200", category: "Accessories" },
+            { id: 7, name: "Dress Shoes", price: 1799, image: "/placeholder.svg?height=200&width=200", category: "Shoes" },
+            { id: 8, name: "Dress", price: 1299, image: "/placeholder.svg?height=200&width=200", category: "Clothes" },
+        ];
+
+        const newestProduct = {
+            id: 9,
+            name: "Smart Watch",
+            price: 3499,
+            image: "/placeholder.svg?height=300&width=600",
+            category: "Accessories"
+        };
+
+        const categories = ["All Products", "Clothes", "Shoes", "Accessories"];
+
+        let cart = [];
+        let selectedCategory = "All Products";
+
+        function renderCategories() {
+            const categoriesContainer = document.getElementById("categories");
+            categoriesContainer.innerHTML = categories.map(category => 
+                `<button onclick="selectCategory('${category}')">${category}</button>`
+            ).join("");
+        }
+
+        function selectCategory(category) {
+            selectedCategory = category;
+            document.getElementById("category-title").textContent = category;
+            renderProducts();
+        }
+
+        function renderProducts() {
+            const productGrid = document.getElementById("product-grid");
+            const newestProductContainer = document.getElementById("newest-product");
+            
+            let filteredProducts = selectedCategory === "All Products" 
+                ? products 
+                : products.filter(product => product.category === selectedCategory);
+
+            productGrid.innerHTML = filteredProducts.map(product => `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>₱${product.price}</p>
+                    <button onclick="addToCart(${product.id})">Add to Cart</button>
+                </div>
+            `).join("");
+
+            if (selectedCategory === "All Products") {
+                newestProductContainer.innerHTML = `
+                    <div class="newest-product">
+                        <h3>New Arrival: ${newestProduct.name}</h3>
+                        <img src="${newestProduct.image}" alt="${newestProduct.name}">
+                        <p>₱${newestProduct.price}</p>
+                        <button onclick="addToCart(${newestProduct.id})">Add to Cart</button>
+                    </div>
+                `;
+            } else {
+                newestProductContainer.innerHTML = "";
+            }
+        }
+
+        function addToCart(productId) {
+            const product = productId === newestProduct.id ? newestProduct : products.find(p => p.id === productId);
+            cart.push(product);
+            updateCartCount();
+        }
+
+        function updateCartCount() {
+            document.getElementById("cart-count").textContent = cart.length;
+        }
+
+        function renderCart() {
+            const cartItems = document.getElementById("cart-items");
+            const cartTotal = document.getElementById("cart-total");
+            
+            cartItems.innerHTML = cart.map(item => `
+                <div>
+                    <span>${item.name} - ₱${item.price}</span>
+                    <button onclick="removeFromCart(${item.id})">Remove</button>
+                </div>
+            `).join("");
+
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            cartTotal.textContent = `Total: ₱${total}`;
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartCount();
+            renderCart();
+        }
+
+        document.getElementById("cart-button").onclick = function() {
+            document.getElementById("cart-modal").style.display = "block";
+            renderCart();
+        }
+
+        document.querySelector(".close").onclick = function() {
+            document.getElementById("cart-modal").style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById("cart-modal")) {
+                document.getElementById("cart-modal").style.display = "none";
+            }
+        }
+
+        document.getElementById("checkout-button").onclick = function() {
+            document.getElementById("checkout-form").style.display = "block";
+            this.style.display = "none";
+        }
+
+        document.getElementsByName("payment").forEach(radio => {
+            radio.onchange = function() {
+                const paymentDetails = document.getElementById("payment-details");
+                if (this.value === "store") {
+                    paymentDetails.innerHTML = `
+                        <h4>Store address:</h4>
+                        <p>123 Main St, Anytown, Philippines</p>
+                        <p>Please keep this order screen. Show it when paying in-store.</p>
+                    `;
+                } else if (this.value === "online") {
+                    paymentDetails.innerHTML = `
+                        <h4>Contact info:</h4>
+                        <p>Messenger: @shopowner</p>
+                        <p>GCash: 1234567890</p>
+                        <p>After payment, please screenshot the order info and transaction record. Contact the seller via Messenger and send your delivery address.</p>
+                    `;
+                }
+            }
+        });
+
+        document.getElementById("submit-order").onclick = function() {
+            const paymentMethod = document.querySelector('input[name="payment"]:checked');
+            if (paymentMethod) {
+                alert(`Order submitted! Payment method: ${paymentMethod.value}`);
+                cart = [];
+                updateCartCount();
+                document.getElementById("cart-modal").style.display = "none";
+                document.getElementById("checkout-form").style.display = "none";
+                document.getElementById("checkout-button").style.display = "block";
+            } else {
+                alert("Please select a payment method.");
+            }
+        }
+
+        // Initial render
+        renderCategories();
+        renderProducts();
+    </script>
+</body>
+</html>
