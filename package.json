@@ -1,0 +1,4 @@
+npm install lucide-react
+npm install @radix-ui/react-radio-group
+npm install @radix-ui/react-dialog
+npm install tailwindcss postcss autoprefixer
